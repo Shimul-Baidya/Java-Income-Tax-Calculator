@@ -1,54 +1,58 @@
 package com.cse.ju.oop.views.screens;
 
+import com.cse.ju.oop.database.User;
+import com.cse.ju.oop.utils.TextFileHandler;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class LoginScreen extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
 
     public LoginScreen(JFrame parent) {
-        super("Login");
-        this.setSize(400, 300);
+        super();
+        this.setTitle("Login");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
         this.setLayout(new GridBagLayout());
+        this.setSize(600, 400);
+        this.setLocationRelativeTo(null);
+
+        usernameField = new JTextField(20);
+        passwordField = new JPasswordField(20);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Username label and field
         gbc.gridx = 0;
         gbc.gridy = 0;
         this.add(new JLabel("Username:"), gbc);
 
         gbc.gridx = 1;
-        usernameField = new JTextField(15);
         this.add(usernameField, gbc);
 
-        // Password label and field
         gbc.gridx = 0;
         gbc.gridy = 1;
         this.add(new JLabel("Password:"), gbc);
 
         gbc.gridx = 1;
-        passwordField = new JPasswordField(15);
         this.add(passwordField, gbc);
 
-        // Login button
         JButton loginButton = new JButton("Login");
         gbc.gridx = 1;
         gbc.gridy = 2;
         this.add(loginButton, gbc);
 
-        // Action listener for login button
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loginUser();
-            }
+        loginButton.addActionListener(e -> loginUser());
+
+        JButton backButton = new JButton("Back");
+        gbc.gridx = 0;
+        this.add(backButton, gbc);
+
+        backButton.addActionListener(e -> {
+            parent.setVisible(true);
+            this.setVisible(false);
         });
     }
 
@@ -56,9 +60,17 @@ public class LoginScreen extends JFrame {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
-        // TODO: Add SQL logic to verify user information from the database
-
-        JOptionPane.showMessageDialog(this, "Login successful!");
-        this.dispose();  // Close login screen
+        try {
+            User user = TextFileHandler.findUserByUsername(username);
+            if (user != null && user.getPassword().equals(password)) {
+                JOptionPane.showMessageDialog(this, "Login successful!");
+                new TaxCalculatorScreen(user).setVisible(true); // Open Tax Calculator Screen
+                this.dispose(); // Close the login screen
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid credentials!");
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading user data.");
+        }
     }
 }

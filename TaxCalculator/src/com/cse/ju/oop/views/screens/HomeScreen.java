@@ -2,8 +2,6 @@ package com.cse.ju.oop.views.screens;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class HomeScreen extends JFrame {
     private static final String appName = "Tax Calculator";
@@ -14,7 +12,7 @@ public class HomeScreen extends JFrame {
         super();
         this.setTitle(appName);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new GridBagLayout());  // Using GridBagLayout for flexibility
+        this.setLayout(new GridBagLayout());
         this.setLocationRelativeTo(null);
         this.setSize(800, 600);
         this.setBackground(Color.WHITE);
@@ -23,13 +21,13 @@ public class HomeScreen extends JFrame {
         registerButton = new JButton("Register");
         loginButton = new JButton("Login");
 
-        // Set button styles (optional)
+        // Set button styles
         customizeButton(registerButton);
         customizeButton(loginButton);
 
         // Adding buttons to the layout
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20);  // Padding around buttons
+        gbc.insets = new Insets(20, 20, 20, 20);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -40,19 +38,8 @@ public class HomeScreen extends JFrame {
         this.add(loginButton, gbc);
 
         // Action listeners for buttons
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openRegistrationScreen();
-            }
-        });
-
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openLoginScreen();
-            }
-        });
+        registerButton.addActionListener(e -> openRegistrationScreen());
+        loginButton.addActionListener(e -> openLoginScreen());
     }
 
     private void customizeButton(JButton button) {
@@ -66,13 +53,11 @@ public class HomeScreen extends JFrame {
     }
 
     private void openRegistrationScreen() {
-        // Logic to open the registration screen
         new RegistrationScreen(this).setVisible(true);
         this.setVisible(false);  // Hide current screen
     }
 
     private void openLoginScreen() {
-        // Logic to open the login screen
         new LoginScreen(this).setVisible(true);
         this.setVisible(false);  // Hide current screen
     }
