@@ -6,55 +6,53 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TaxCalculatorScreen extends JFrame {
-    private JLabel resultLabel;
-    private JLabel taxAmountLabel;
+    private JLabel resultLabel, taxAmountLabel;
+    private JButton logoutButton;
 
     public TaxCalculatorScreen(User user) {
-        super();
-        this.setTitle("Tax Calculator");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new GridBagLayout());
-        this.setSize(400, 200);
-        this.setLocationRelativeTo(null);
+        super("Tax Calculator");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridBagLayout());
+        setSize(400, 250);
+        setLocationRelativeTo(null);
 
-        resultLabel = new JLabel();
-        taxAmountLabel = new JLabel();
+        resultLabel = new JLabel("Tax Category: " + user.getTaxCategory());
+        taxAmountLabel = new JLabel("Tax Amount: $" + calculateTaxAmount(user.getIncome()));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Display user income and tax amount
-        String taxCategory = calculateTaxCategory(user.getIncome());
-        double taxAmount = calculateTaxAmount(user.getIncome());
-
-        resultLabel.setText("Tax Category: " + taxCategory);
-        taxAmountLabel.setText("Tax Amount: $" + taxAmount);
-
         gbc.gridx = 0;
         gbc.gridy = 0;
-        this.add(resultLabel, gbc);
+        add(resultLabel, gbc);
 
         gbc.gridy = 1;
-        this.add(taxAmountLabel, gbc);
-    }
+        add(taxAmountLabel, gbc);
 
-    private String calculateTaxCategory(double income) {
-        if (income < 30000) {
-            return "Low";
-        } else if (income < 70000) {
-            return "Medium";
-        } else {
-            return "High";
-        }
+        logoutButton = new JButton("Logout");
+        customizeButton(logoutButton);
+        gbc.gridy = 2;
+        add(logoutButton, gbc);
+
+        logoutButton.addActionListener(e -> {
+            new HomeScreen().setVisible(true);
+            dispose();
+        });
     }
 
     private double calculateTaxAmount(double income) {
-        if (income < 30000) {
-            return income * 0.05; // 5% tax for low income
-        } else if (income < 70000) {
-            return income * 0.15; // 15% tax for medium income
-        } else {
-            return income * 0.25; // 25% tax for high income
-        }
+        if (income < 30000) return income * 0.05;
+        else if (income < 70000) return income * 0.15;
+        else return income * 0.25;
+    }
+
+    private void customizeButton(JButton button) {
+        button.setPreferredSize(new Dimension(120, 30));
+        button.setFont(new Font("Arial", Font.BOLD, 12));
+        button.setBackground(new Color(255, 69, 0)); // Orange-Red
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
     }
 }
